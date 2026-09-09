@@ -1,14 +1,13 @@
 import streamlit as st
-import padnas as pd
+import modules.load_fileModule as load
+import modules.data_analyst as dt
+
+st.set_page_config(layout="wide")
+
 def main():
-    st.title("Hola mundo")
-    st.header("Esto es un titulo")
-    st.subheader("Esto es un subtitulo")
-    st.text("Esto es un texto")
-    nombre = 'francisco'
-    st.text(f'Identando texto mi nombre {nombre}')
-    st.markdown("###Usando markdown para la página")
-    st.success("Confirmado")
+    data = load.load_file()
+    if data is not None:
+        dt.dataAnalyst(data)
 
 if __name__ == '__main__':
     main()

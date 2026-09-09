@@ -1,4 +1,4 @@
-# Proyecto: Analizador de Datos Personal
+# Proyecto: Analizador de Finanzas Personales
 
 ## Contexto para Claude
 
@@ -16,13 +16,38 @@ El objetivo es aprender manejo de datos mientras construye algo presentable para
 
 ## Descripción del proyecto
 
-Herramienta web construida con Streamlit que permite cargar cualquier archivo CSV
-y automáticamente genera estadísticas descriptivas y visualizaciones interactivas.
-El usuario no necesita saber programación — solo sube su archivo y explora los datos.
+Herramienta web construida con Streamlit que permite cargar el registro de movimientos financieros
+personales del usuario (CSV o Excel `.xlsx` — un extracto bancario exportado, una planilla propia de
+gastos, lo que ya tenga) y automáticamente genera resumen de ingresos/gastos, distribución por
+categoría, evolución en el tiempo y balance. El usuario no necesita saber programación, Excel ni
+ningún formato específico — solo sube lo que ya tiene.
+
+**Qué NO hace este proyecto (fuera de alcance, a propósito):**
+- No calcula impuestos — depende de jurisdicción/régimen fiscal, es un dominio legal/contable
+  aparte, no algo que resuelva un análisis de datos genérico.
+- No hace proyecciones ni forecasting — el foco es análisis descriptivo de lo ya ocurrido.
+- No asesora financieramente ni da recomendaciones — solo muestra los datos que el usuario ya tiene.
+
+**Mapeo de columnas (decisión de diseño clave):**
+Como cada banco/persona exporta sus movimientos con nombres de columna distintos ("Fecha" vs
+"Date" vs "Fecha transacción"), la app NO asume nombres fijos. Después de subir el archivo, el
+usuario indica con selectores (`st.selectbox`) cuáles de sus columnas corresponden a:
+- **Fecha** de la transacción
+- **Monto** (positivo/negativo, o con una columna de tipo aparte)
+- **Categoría** (opcional — si no existe, se omiten las vistas que dependen de categoría)
+- **Descripción** (opcional)
+
+Esto mantiene el "funciona con cualquier archivo" sin tener que adivinar la estructura, y es el
+mismo patrón de selector que ya vas a usar en el Módulo 5 (filtros) — así que sirve como
+introducción temprana a `st.selectbox()`.
+
+Si el archivo es Excel y tiene varias hojas, el usuario elige cuál analizar (una tabla a la vez,
+sin combinar hojas automáticamente — eso mantiene el alcance simple).
 
 **Stack:**
 - Python
-- Pandas — manipulación y análisis de datos
+- Pandas — manipulación y análisis de datos (incluye `read_csv` y `read_excel`)
+- openpyxl — motor para que Pandas pueda leer archivos `.xlsx`
 - Matplotlib / Seaborn — visualizaciones
 - Streamlit — interfaz web
 
@@ -32,79 +57,92 @@ El usuario no necesita saber programación — solo sube su archivo y explora lo
 
 ## Módulos del proyecto
 
-### Módulo 1 — Setup y estructura base
-**Objetivo:** Tener Streamlit corriendo con una interfaz básica.
+### Módulo 1 — Setup, carga y mapeo de columnas
+**Objetivo:** Tener Streamlit corriendo, con el usuario pudiendo subir su archivo y decirle a la
+app qué columna es cuál.
 
 Tareas:
-- Instalar dependencias: `pip install streamlit pandas matplotlib seaborn`
+- Instalar dependencias: `pip install streamlit pandas matplotlib seaborn openpyxl`
 - Crear estructura de carpetas del proyecto
-- Página principal con título, descripción y uploader de archivos
-- Mostrar el DataFrame crudo cuando se sube un archivo
+- Página principal con título, descripción y uploader (acepta `.csv` y `.xlsx`)
+- Detectar la extensión del archivo y leer con `read_csv` o `read_excel` según corresponda
+- Si es Excel con varias hojas, selector de hoja
+- Mostrar el DataFrame crudo
+- Selectores para que el usuario mapee sus columnas a: Fecha, Monto, Categoría (opcional),
+  Descripción (opcional)
 
-Criterio de éxito: al correr `streamlit run app.py` aparece una página con uploader funcional.
+Criterio de éxito: al correr `streamlit run app.py`, subir un archivo propio (CSV o Excel) y
+mapear sus columnas, la app reconoce cuáles son fecha/monto/categoría sin importar cómo se llamen
+originalmente.
 
 ---
 
-### Módulo 2 — Resumen estadístico
-**Objetivo:** Mostrar estadísticas descriptivas del dataset cargado.
+### Módulo 2 — Resumen financiero
+**Objetivo:** Mostrar un resumen de ingresos, gastos y balance a partir de la columna de Monto.
 
 Tareas:
-- Número de filas y columnas
-- Tipos de datos por columna
-- Valores nulos por columna
-- Estadísticas descriptivas con `df.describe()`
+- Total de ingresos (montos positivos) y total de gastos (montos negativos, en valor absoluto)
+- Balance neto (ingresos − gastos)
+- Número de transacciones y rango de fechas cubierto
+- Gasto promedio por transacción
+- Valores nulos por columna (para que el usuario sepa si su archivo tiene datos incompletos)
 - Mostrar todo con `st.metric()`, `st.dataframe()` y `st.write()`
 
-Criterio de éxito: al subir un CSV aparece un resumen claro del contenido.
+Criterio de éxito: al subir un archivo y mapear columnas, aparece un resumen claro de cuánto
+entró, cuánto salió y el balance.
 
 ---
 
 ### Módulo 3 — Visualizaciones automáticas
-**Objetivo:** Generar gráficas útiles según el tipo de dato de cada columna.
+**Objetivo:** Mostrar gráficas sobre cómo se distribuye el dinero.
 
 Tareas:
-- Detectar columnas numéricas vs categóricas
-- Histograma para columnas numéricas
-- Gráfica de barras para columnas categóricas
-- Selector de columna con `st.selectbox()`
+- Gráfica de barras: gasto total por categoría (si el usuario mapeó una columna de categoría)
+- Línea de tiempo: evolución del balance o del gasto acumulado según la columna de Fecha
+- Histograma de la distribución de montos
 - Mostrar gráfica con `st.pyplot()`
 
-Criterio de éxito: el usuario puede elegir cualquier columna y ver su distribución.
+Criterio de éxito: el usuario ve en qué categorías gasta más y cómo evoluciona su dinero en el
+tiempo.
 
 ---
 
-### Módulo 4 — Análisis de correlaciones
-**Objetivo:** Mostrar relaciones entre variables numéricas.
+### Módulo 4 — Relaciones entre variables
+**Objetivo:** Mostrar relaciones entre las columnas numéricas disponibles (más allá de Monto, si
+el archivo trae otras — ej. cantidad de ítems, cuotas).
 
 Tareas:
-- Matriz de correlación con `df.corr()`
+- Matriz de correlación con `df.corr()` sobre las columnas numéricas del archivo
 - Heatmap con Seaborn
-- Scatter plot entre dos columnas seleccionadas por el usuario
-- Dos selectores: columna X y columna Y
+- Scatter plot entre dos columnas numéricas seleccionadas por el usuario
+- Si el archivo solo tiene una columna numérica (Monto), mostrar un mensaje claro de que no hay
+  suficientes variables para correlacionar, en vez de romper
 
-Criterio de éxito: el usuario puede explorar relaciones entre cualquier par de variables.
+Criterio de éxito: cuando el archivo lo permite, el usuario puede explorar relaciones entre pares
+de variables numéricas.
 
 ---
 
 ### Módulo 5 — Filtros interactivos
-**Objetivo:** Permitir al usuario filtrar los datos y ver cómo cambian las estadísticas.
+**Objetivo:** Permitir filtrar los movimientos y ver cómo cambian el resumen y las gráficas.
 
 Tareas:
-- Slider para filtrar columnas numéricas por rango
-- Multiselect para filtrar columnas categóricas por valor
-- Actualizar todas las estadísticas y gráficas en tiempo real
-- Mostrar cuántos registros quedan después del filtro
+- Selector de rango de fechas (filtra por la columna de Fecha mapeada)
+- Multiselect para filtrar por categoría (si existe)
+- Slider para filtrar por rango de monto
+- Actualizar resumen financiero y gráficas en tiempo real
+- Mostrar cuántas transacciones quedan después del filtro
 
 Criterio de éxito: los filtros actualizan todo el dashboard automáticamente.
 
 ---
 
 ### Módulo 6 — Exportar resultados
-**Objetivo:** Permitir descargar el dataset filtrado y las estadísticas.
+**Objetivo:** Permitir descargar los movimientos filtrados y el resumen financiero.
 
 Tareas:
 - Botón para descargar CSV filtrado con `st.download_button()`
-- Botón para descargar resumen estadístico como CSV
+- Botón para descargar el resumen financiero como CSV
 - Mensaje de confirmación al descargar
 
 Criterio de éxito: el usuario puede descargar los resultados de su análisis.
@@ -115,23 +153,25 @@ Criterio de éxito: el usuario puede descargar los resultados de su análisis.
 **Objetivo:** Dejar el proyecto presentable y publicado con URL pública.
 
 Tareas:
-- Agregar manejo de errores: CSV vacío, columnas sin datos, archivo inválido
-- Mejorar textos y mensajes al usuario
+- Manejo de errores: archivo vacío, sin columna reconocible como monto/fecha, mapeo incompleto,
+  archivo inválido
+- Mejorar textos y mensajes al usuario (aclarar que no calcula impuestos ni da asesoría)
 - Agregar README con descripción del proyecto
 - Crear cuenta en Streamlit Community Cloud
 - Conectar repositorio de GitHub y deployar
 - Verificar que funciona con la URL pública
 
-Criterio de éxito: cualquier persona puede abrir la URL y usar la herramienta.
+Criterio de éxito: cualquier persona puede abrir la URL, subir su propio archivo de movimientos y
+usar la herramienta sin instrucciones adicionales.
 
 ---
 
 ## Estado del proyecto
 
-- [ ] Módulo 1 — Setup y estructura base
-- [ ] Módulo 2 — Resumen estadístico
+- [ ] Módulo 1 — Setup, carga y mapeo de columnas
+- [ ] Módulo 2 — Resumen financiero
 - [ ] Módulo 3 — Visualizaciones automáticas
-- [ ] Módulo 4 — Análisis de correlaciones
+- [ ] Módulo 4 — Relaciones entre variables
 - [ ] Módulo 5 — Filtros interactivos
 - [ ] Módulo 6 — Exportar resultados
 - [ ] Módulo 7 — Pulir y deployar
@@ -140,6 +180,8 @@ Criterio de éxito: cualquier persona puede abrir la URL y usar la herramienta.
 
 ## Notas
 
-- Usar datasets públicos de Kaggle para probar durante el desarrollo
-- El proyecto debe funcionar con CUALQUIER CSV, no solo uno específico
+- Usar datasets públicos de Kaggle o extractos bancarios de ejemplo (anonimizados) para probar
+  durante el desarrollo
+- El proyecto debe funcionar con CUALQUIER archivo de movimientos (CSV o Excel), sin asumir
+  nombres de columna fijos — de ahí el mapeo de columnas del Módulo 1
 - Priorizar que funcione bien antes de que se vea bien

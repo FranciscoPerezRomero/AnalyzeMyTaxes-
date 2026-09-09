@@ -1,0 +1,21 @@
+id,producto,categoria,region,precio,cantidad,rating,fecha
+1,Laptop Pro 14,Electronica,Norte,1200.50,3,4.5,2026-01-05
+2,Mouse Inalambrico,Accesorios,Sur,25.99,15,4.1,2026-01-06
+3,Teclado Mecanico,Accesorios,Norte,89.90,8,4.7,2026-01-07
+4,Monitor 27",Electronica,Este,320.00,5,4.3,2026-01-08
+5,Silla Ergonomica,Muebles,Oeste,450.75,2,,2026-01-09
+6,Escritorio Ajustable,Muebles,Norte,610.00,1,4.6,2026-01-10
+7,Auriculares BT,Accesorios,Sur,79.99,12,3.9,2026-01-11
+8,Webcam HD,Electronica,Este,55.50,20,4.0,2026-01-12
+9,Lampara LED,Muebles,Oeste,34.20,18,4.2,
+10,Disco SSD 1TB,Electronica,Norte,110.00,7,4.8,2026-01-14
+11,Cargador USB-C,Accesorios,Sur,19.99,25,,2026-01-15
+12,Silla Gamer,Muebles,Este,320.00,4,4.4,2026-01-16
+13,Tablet 10",Electronica,Oeste,410.00,6,4.1,2026-01-17
+14,Mousepad XL,Accesorios,Norte,12.50,30,3.8,2026-01-18
+15,Estante Modular,Muebles,Sur,150.00,9,4.0,2026-01-19
+16,Router WiFi6,Electronica,Este,95.00,11,4.5,2026-01-20
+17,Soporte Monitor,Accesorios,Oeste,29.99,14,,2026-01-21
+18,Sofa 2 Plazas,Muebles,Norte,780.00,2,4.9,2026-01-22
+19,Impresora Laser,Electronica,Sur,220.00,3,3.7,2026-01-23
+20,Hub USB,Accesorios,Este,18.75,22,4.2,2026-01-24
