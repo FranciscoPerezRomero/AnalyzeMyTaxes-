@@ -16,7 +16,11 @@ def dataAnalyst(data):
     with col1:
         st.subheader("Gastos del mes")
         st.write(numDataPositive)
+        st.subheader("Total de ingresos del periodo seleccionado")
+        st.write(numDataPositive[column].sum())
     with col2:
         st.subheader("Gastos del mes")
         st.write(numDataNegative)
+        st.subheader("Total de gastos del periodo seleccionado")
+        st.subheader(numDataNegative[column].sum())
     
