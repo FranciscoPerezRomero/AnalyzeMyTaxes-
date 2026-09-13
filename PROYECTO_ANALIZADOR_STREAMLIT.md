@@ -46,9 +46,12 @@ sin combinar hojas automáticamente — eso mantiene el alcance simple).
 
 **Stack:**
 - Python
-- Pandas — manipulación y análisis de datos (incluye `read_csv` y `read_excel`)
+- Pandas — manipulación y análisis de datos (incluye `read_csv` y `read_excel`) — la herramienta
+  central que se está practicando en este proyecto
 - openpyxl — motor para que Pandas pueda leer archivos `.xlsx`
-- Matplotlib / Seaborn — visualizaciones
+- Plotly (Plotly Express) — visualizaciones interactivas (hover, zoom), en vez de Matplotlib/Seaborn
+  — decisión consciente: se prioriza interactividad para el dashboard, ya que Pandas es la
+  habilidad que más transfiere a otros contextos, y la librería de gráficas es más intercambiable
 - Streamlit — interfaz web
 
 **Deploy:** Streamlit Community Cloud (gratis, URL pública para portafolio)
@@ -62,7 +65,7 @@ sin combinar hojas automáticamente — eso mantiene el alcance simple).
 app qué columna es cuál.
 
 Tareas:
-- Instalar dependencias: `pip install streamlit pandas matplotlib seaborn openpyxl`
+- Instalar dependencias: `pip install streamlit pandas plotly openpyxl`
 - Crear estructura de carpetas del proyecto
 - Página principal con título, descripción y uploader (acepta `.csv` y `.xlsx`)
 - Detectar la extensión del archivo y leer con `read_csv` o `read_excel` según corresponda
@@ -97,10 +100,12 @@ entró, cuánto salió y el balance.
 **Objetivo:** Mostrar gráficas sobre cómo se distribuye el dinero.
 
 Tareas:
-- Gráfica de barras: gasto total por categoría (si el usuario mapeó una columna de categoría)
-- Línea de tiempo: evolución del balance o del gasto acumulado según la columna de Fecha
-- Histograma de la distribución de montos
-- Mostrar gráfica con `st.pyplot()`
+- Gráfica de barras: gasto total por categoría (si el usuario mapeó una columna de categoría) —
+  `px.bar()`
+- Línea de tiempo: evolución del balance o del gasto acumulado según la columna de Fecha —
+  `px.line()`
+- Histograma de la distribución de montos — `px.histogram()`
+- Mostrar cada gráfica con `st.plotly_chart(fig)` (no `st.pyplot()`, que es para Matplotlib)
 
 Criterio de éxito: el usuario ve en qué categorías gasta más y cómo evoluciona su dinero en el
 tiempo.
@@ -113,8 +118,8 @@ el archivo trae otras — ej. cantidad de ítems, cuotas).
 
 Tareas:
 - Matriz de correlación con `df.corr()` sobre las columnas numéricas del archivo
-- Heatmap con Seaborn
-- Scatter plot entre dos columnas numéricas seleccionadas por el usuario
+- Heatmap con `px.imshow()` (equivalente en Plotly al heatmap de Seaborn, pero interactivo)
+- Scatter plot entre dos columnas numéricas seleccionadas por el usuario — `px.scatter()`
 - Si el archivo solo tiene una columna numérica (Monto), mostrar un mensaje claro de que no hay
   suficientes variables para correlacionar, en vez de romper
 
