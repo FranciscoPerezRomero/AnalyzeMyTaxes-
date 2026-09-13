@@ -1,9 +1,9 @@
 import pandas as pd
 import streamlit as st
-
+import plotly.express as px
 
 def dataAnalyst(data):
-    df = pd.DataFrame(data)
+    df = data
     namesColumns = df.select_dtypes(include='number').columns
     # * Selección de columna de datos
     column = st.selectbox("Elige la columna con tus gastos", options=namesColumns)
@@ -40,4 +40,5 @@ def dataAnalyst(data):
         # * Impresión de media de la columna
         st.metric("Gasto medio", abs(gasto_medio))
 
+    return column
     

@@ -2,7 +2,8 @@
 
 ## Contexto para Claude
 
-Cisco es desarrollador Fullstack Jr. practicando Python con Pandas y Matplotlib.
+Cisco es desarrollador Fullstack Jr. practicando Python con Pandas — la habilidad central de este
+proyecto — y Plotly para las visualizaciones interactivas.
 Este proyecto usa Streamlit como interfaz web — es su primera vez con esta librería.
 El objetivo es aprender manejo de datos mientras construye algo presentable para su portafolio.
 

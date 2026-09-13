@@ -1,6 +1,7 @@
 import streamlit as st
 import modules.load_fileModule as load
 import modules.data_analyst as dt
+import modules.graphics as gp
 
 st.set_page_config(layout="wide")
 
@@ -29,7 +30,8 @@ st.markdown("""
 def main():
     data = load.load_file()
     if data is not None:
-        dt.dataAnalyst(data)
+        column = dt.dataAnalyst(data)
+        gp.graphics_analyst(data, column)
 
 if __name__ == '__main__':
     main()

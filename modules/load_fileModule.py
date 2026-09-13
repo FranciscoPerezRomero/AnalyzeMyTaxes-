@@ -19,7 +19,7 @@ def load_file():
             st.write(data)
             return data
         elif upload_file.name.endswith('csv'):
-            data  = pd.read_csv(upload_file)
+            data = pd.read_csv(upload_file)
             # * Mostrar datos
             st.title("\nVisualizar datos")
             st.write(data)
