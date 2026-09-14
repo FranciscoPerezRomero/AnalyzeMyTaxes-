@@ -30,8 +30,19 @@ st.markdown("""
 def main():
     data = load.load_file()
     if data is not None:
-        column = dt.dataAnalyst(data)
-        gp.graphics_analyst(data, column)
+        # * Mapeo de columnas: el usuario indica cuáles de sus columnas
+        # * corresponden a Monto, Fecha y Categoría, sin asumir nombres fijos
+        st.subheader("Mapeo de columnas")
+        map1, map2, map3 = st.columns(3)
+        with map1:
+            column = st.selectbox("¿Cuál es tu columna de Monto?", options=data.select_dtypes(include='number').columns)
+        with map2:
+            fecha_col = st.selectbox("¿Cuál es tu columna de Fecha?", options=data.columns)
+        with map3:
+            categoria_col = st.selectbox("¿Cuál es tu columna de Categoría?", options=data.columns)
+
+        dt.dataAnalyst(data, column)
+        gp.graphics_analyst(data, column, fecha_col, categoria_col)
 
 if __name__ == '__main__':
     main()
