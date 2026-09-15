@@ -1,7 +1,7 @@
 import streamlit as st
 import modules.load_fileModule as load
-import modules.data_analyst as dt
-import modules.graphics as gp
+import modules.data_analystModule as dt
+import modules.graphicsModule as gp
 
 st.set_page_config(layout="wide")
 
