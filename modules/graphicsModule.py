@@ -15,8 +15,9 @@ def graphics_analyst(data, column, fecha_col, categoria_col):
     st.subheader("Distribución de gastos")
     st.write(px.bar(gasto.groupby(categoria_col)[column].sum().reset_index(), x=categoria_col, y=column))
     # * Linea del tiempo
+
     st.subheader("Linea de gastos acumulados")
-    st.write(px.line(gasto, x=fecha_col, y="Acumulado", markers=True))
+    st.write(px.line(gasto, x=pd.to_datetime(fecha_col), y="Acumulado", markers=True))
     # * Histograma
     st.subheader("Histograma de movimientos")
     st.write(px.histogram(gasto, x=column))
