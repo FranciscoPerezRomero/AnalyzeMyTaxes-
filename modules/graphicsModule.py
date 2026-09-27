@@ -13,12 +13,11 @@ def graphics_analyst(data, column, fecha_col, categoria_col):
     gasto["Acumulado"] = gasto[column].cumsum()
     # * Agrupación por categoría y grafico
     st.subheader("Distribución de gastos")
-    st.write(px.bar(gasto.groupby(categoria_col)[column].sum().reset_index(), x=categoria_col, y=column))
+    st.plotly_chart(px.bar(gasto.groupby(categoria_col)[column].sum().reset_index(), x=categoria_col, y=column))
     # * Linea del tiempo
 
     st.subheader("Linea de gastos acumulados")
-    st.write(px.line(gasto, x=pd.to_datetime(fecha_col), y="Acumulado", markers=True))
+    st.plotly_chart(px.line(gasto, x=fecha_col, y="Acumulado", markers=True))
     # * Histograma
     st.subheader("Histograma de movimientos")
-    st.write(px.histogram(gasto, x=column))
-
+    st.plotly_chart(px.histogram(gasto, x=column))

@@ -18,9 +18,15 @@ def dataAnalyst(data, column):
     gasto_medio = abs(numDataNegative[column]).mean()
 
     # ? Se define como mostrar información
+
+    st.subheader("Resumen de datos")
+    st.metric("Numero de gastos", len(numDataNegative))
+    #st.metric("Numero de datos nulos", )
+
     col1, col2 = st.columns(2)
+    st.subheader("Estadisticas calculadas")                         
     with col1:
-        st.subheader("Gastos del mes")
+        st.subheader("Ingresos del mes")
         st.write(numDataPositive)
     with col2:
         st.subheader("Gastos del mes")
@@ -29,11 +35,11 @@ def dataAnalyst(data, column):
     # ? Columnas de metricas
     totales, estadistica = st.columns (2)
     with totales:
-        st.subheader("")
         st.metric("Ingresos", ingresos)
         st.metric("Gastos", gastos)
         st.metric("Balance", ingresos - abs(gastos))
     with estadistica:
         # * Impresión de media de la columna
         st.metric("Gasto medio", abs(gasto_medio))
+
 
